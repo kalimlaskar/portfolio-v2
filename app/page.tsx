@@ -22,7 +22,7 @@ if (typeof window !== 'undefined') {
 const HERO_ACTIONS = [
   { label: 'GitHub', href: 'https://github.com/kalimlaskar/', external: true },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/kalimlaskar/', external: true },
-  { label: 'Resume', href: '/Kalim-Laskar-%20Resume.pdf', external: true },
+  { label: 'Resume', href: '/Kalim-Laskar-Resume.pdf', external: true },
   { label: 'Contact', href: 'mailto:kalim007mailbox@gmail.com', external: false },
 ];
 

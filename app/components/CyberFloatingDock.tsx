@@ -26,7 +26,7 @@ const GLOBAL_ACTIONS = [
     },
     {
         label: 'Resume',
-        href: '/Kalim-Laskar-%20Resume.pdf',
+        href: '/Kalim-Laskar-Resume.pdf',
         external: true,
         icon: (
             <>
