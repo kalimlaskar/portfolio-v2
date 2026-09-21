@@ -23,13 +23,10 @@ export default function Home() {
   const leftTextRef = useRef<HTMLDivElement>(null);
   const rightCardRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLElement>(null);
-  const footballSectionRef = useRef<HTMLElement>(null);
   const rotatingTextRef = useRef<HTMLSpanElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const linePathRef = useRef<SVGPathElement>(null);
   const ballRef = useRef<HTMLDivElement>(null);
-  const footballRef = useRef<HTMLDivElement>(null);
-  const footballPathRef = useRef<SVGPathElement>(null);
 
   const rotatingWords = ['Digital Realities', 'Frontend Systems', 'Web Experiences'];
   const [wordIndex, setWordIndex] = useState(0);
@@ -99,21 +96,6 @@ export default function Home() {
 
         tl.to(path, { strokeDashoffset: 0, ease: 'none' }, 0);
         tl.to(ballRef.current, { motionPath: { path: path, align: path, alignOrigin: [0.5, 0.5] }, ease: 'none' }, 0);
-      }
-
-      // Football Dribble animation
-      const fbPath = footballPathRef.current;
-      const fbBall = footballRef.current;
-      if (fbPath && fbBall) {
-        const fbPathLength = fbPath.getTotalLength();
-        gsap.set(fbPath, { strokeDasharray: fbPathLength, strokeDashoffset: fbPathLength });
-
-        const footballTl = gsap.timeline({
-          scrollTrigger: { trigger: footballSectionRef.current, start: 'top 70%', end: 'bottom 30%', scrub: 1.2 },
-        });
-
-        footballTl.to(fbPath, { strokeDashoffset: 0, ease: 'none' }, 0);
-        footballTl.to(fbBall, { motionPath: { path: fbPath, align: fbPath, alignOrigin: [0.5, 0.5], autoRotate: true }, ease: 'none' }, 0);
       }
 
       gsap.utils.toArray<HTMLElement>('.bento-card').forEach((card) => {
@@ -208,22 +190,6 @@ export default function Home() {
           opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
         }
         .bento-card:hover::before { opacity: 1; }
-        @keyframes svg-wave-move {
-          0% { transform: translateX(0) translateZ(0); }
-          50% { transform: translateX(-30px) translateZ(0); }
-          100% { transform: translateX(0) translateZ(0); }
-        }
-        @keyframes pulse-glow {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 0.8; transform: scale(1.1); }
-        }
-        .svg-wave-anim { animation: svg-wave-move 7s ease-in-out infinite; }
-        .pulse-circle { animation: pulse-glow 4s ease-in-out infinite; }
-        .tech-grid-bg {
-          background-image: linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-                            linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-          background-size: 48px 48px;
-        }
         @keyframes border-rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes continuous-float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
         .rotating-border-btn {
@@ -240,22 +206,12 @@ export default function Home() {
         }
         .btn-inner-content { position: relative; background: #0066ff; border-radius: 9999px; transition: background 0.3s ease; }
         .rotating-border-btn:hover .btn-inner-content { background: #0052cc; }
-        .nav-glass {
-          background: rgba(3, 3, 5, 0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-          border-bottom: 1px solid rgba(16, 185, 129, 0.15); transform: translateZ(0);
-        }
-        .nav-link { position: relative; transition: color 0.3s ease; }
-        .nav-link::after {
-          content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0;
-          background: #10b981; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .nav-link:hover::after { width: 100%; }
       `}</style>
 
       {/* Floating Navigation */}
       <Cybernav />
 
-      {/* Hero Section with Split-Reveal 3D Scroll Effect & Pixel Shatter Avatar */}
+      {/* Hero Section */}
       <section ref={heroRef} className="pt-[140px] pb-[100px] relative flex flex-col items-center justify-center min-h-[95vh] w-full overflow-hidden px-6">
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
           <div ref={bgRef} className="absolute inset-[-40px] bg-cover bg-center opacity-50 cyber-bg-fx" style={{ backgroundImage: `url('/cyber-hero-bg.png')` }} />
@@ -274,7 +230,7 @@ export default function Home() {
         {/* Main Hero Container */}
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-30 perspective-[1200px]">
 
-          {/* Left Column: Text Content (Splits Left on Scroll) */}
+          {/* Left Column: Text Content */}
           <div ref={leftTextRef} className="lg:col-span-7 text-left space-y-6 transform-gpu">
             <div className="hero-anim inline-flex items-center space-x-3 rounded-2xl bg-zinc-900/90 px-4 py-2 border border-emerald-500/20 shadow-2xl backdrop-blur-md">
               <span className="text-base">🏆</span>
@@ -319,78 +275,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2nd Fold: Bento Grid */}
-      {/* <section ref={bentoRef} id="about" className="py-32 px-8 max-w-6xl mx-auto relative z-20 tech-grid-bg">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 blur-[140px] rounded-full pointer-events-none -z-10" />
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-mono uppercase tracking-widest text-emerald-400 block mb-2">Core Engineering</span>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Engineered For Performance</h2>
-        </div>
+      {/* Bento Grid Section */}
+      <div ref={bentoRef}>
+        <CyberBento onBentoMouseMove={handleBentoMouseMove} />
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div onMouseMove={handleBentoMouseMove} className="bento-card md:col-span-2 p-8 flex flex-col justify-between h-[340px] relative overflow-hidden">
-            <div className="absolute -right-10 -bottom-10 w-[400px] h-[220px] opacity-45 pointer-events-none svg-wave-anim">
-              <svg viewBox="0 0 500 200" fill="none"><path d="M0 100C100 30 200 170 300 100C400 30 450 150 500 100V200H0V100Z" fill="url(#vector-wave-grad)" /><defs><linearGradient id="vector-wave-grad" x1="0" y1="0" x2="500" y2="200" gradientUnits="userSpaceOnUse"><stop stopColor="#10b981" stopOpacity="0.5" /><stop offset="1" stopColor="#00d2ff" stopOpacity="0.1" /></linearGradient></defs></svg>
-            </div>
-            <div className="relative z-10">
-              <span className="text-xs font-mono text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 inline-block mb-4">ARCHITECTURE</span>
-              <h3 className="text-2xl md:text-3xl font-bold mb-3">Fluid Motion & React Systems</h3>
-              <p className="text-zinc-400 text-sm md:text-base max-w-md">Building high-performance Next.js web applications with butter-smooth GSAP scroll orchestration.</p>
-            </div>
-            <div className="flex items-center space-x-2 text-xs font-mono text-zinc-500 relative z-10">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Optimized 60 FPS Render Pipeline</span>
-            </div>
-          </div>
-
-          <div onMouseMove={handleBentoMouseMove} className="bento-card p-8 flex flex-col justify-between h-[340px] relative overflow-hidden">
-            <div className="absolute right-4 top-4 w-28 h-28 pointer-events-none">
-              <svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="35" stroke="#10b981" strokeWidth="1.5" strokeDasharray="5 5" className="pulse-circle" /><circle cx="50" cy="50" r="20" fill="#10b981" fillOpacity="0.2" /><circle cx="50" cy="50" r="6" fill="#10b981" /></svg>
-            </div>
-            <div className="relative z-10">
-              <span className="text-xs font-mono text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 inline-block mb-4">PERFORMANCE</span>
-              <h3 className="text-2xl font-bold mb-3">Sub-20MB Heap</h3>
-              <p className="text-zinc-400 text-sm">Extremely lightweight client footprint ensuring instant load times.</p>
-            </div>
-            <div className="text-4xl font-black bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent relative z-10">17.4 MB</div>
-          </div>
-
-          <div onMouseMove={handleBentoMouseMove} className="bento-card p-8 flex flex-col justify-between h-[340px]">
-            <div>
-              <span className="text-xs font-mono text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 inline-block mb-4">TECH STACK</span>
-              <h3 className="text-2xl font-bold mb-3">Modern Toolchain</h3>
-              <p className="text-zinc-400 text-sm">Next.js App Router, Tailwind CSS, GSAP ScrollTrigger, and WebGL shaders.</p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <span className="text-xs px-2.5 py-1 rounded bg-zinc-800/80 text-zinc-300 font-mono">Next.js</span>
-              <span className="text-xs px-2.5 py-1 rounded bg-zinc-800/80 text-zinc-300 font-mono">GSAP</span>
-              <span className="text-xs px-2.5 py-1 rounded bg-zinc-800/80 text-zinc-300 font-mono">Tailwind</span>
-            </div>
-          </div>
-
-          <div onMouseMove={handleBentoMouseMove} className="bento-card md:col-span-2 p-8 flex flex-col justify-between h-[340px] relative overflow-hidden">
-            <div className="absolute right-6 bottom-4 w-52 h-36 opacity-35 pointer-events-none">
-              <svg viewBox="0 0 200 120" fill="none"><path d="M10 110V70C10 50 30 30 50 30H190" stroke="#00d2ff" strokeWidth="2" strokeDasharray="6 6" /><circle cx="190" cy="30" r="5" fill="#00d2ff" /><path d="M40 120V90C40 75 55 60 70 60H160" stroke="#10b981" strokeWidth="2" /><circle cx="160" cy="60" r="5" fill="#10b981" /></svg>
-            </div>
-            <div className="relative z-10">
-              <span className="text-xs font-mono text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 inline-block mb-4">DESIGN SYSTEMS</span>
-              <h3 className="text-2xl md:text-3xl font-bold mb-3">Cyber-Neon Aesthetic & Glassmorphism</h3>
-              <p className="text-zinc-400 text-sm md:text-base max-w-md">Merging dark-mode futuristic interfaces with high-contrast accessibility.</p>
-            </div>
-            <div className="flex items-center space-x-2 text-xs font-mono text-zinc-500 relative z-10">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-              <span>GPU Accelerated Layer Composition</span>
-            </div>
-          </div>
-        </div>
-      </section> */}
-      <CyberBento onBentoMouseMove={handleBentoMouseMove} />
       {/* Connector Beam & Ball Follower */}
       <div className="relative w-full h-36 flex justify-center items-center overflow-visible my-4">
         <svg className="absolute w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 1200 120">
           <path d="M 150 10 C 600 120 600 120 1050 10" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3" />
           <path ref={linePathRef} d="M 150 10 C 600 120 600 120 1050 10" fill="none" stroke="url(#beam-gradient)" strokeWidth="4" strokeLinecap="round" />
-          <defs><linearGradient id="beam-gradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="#10b981" /><stop offset="50%" stopColor="#00d2ff" /><stop offset="100%" stopColor="#10b981" /></linearGradient></defs>
+          <defs>
+            <linearGradient id="beam-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#10b981" />
+              <stop offset="50%" stopColor="#00d2ff" />
+              <stop offset="100%" stopColor="#10b981" />
+            </linearGradient>
+          </defs>
         </svg>
         <div ref={ballRef} className="absolute w-6 h-6 rounded-full bg-cyan-400 shadow-[0_0_20px_#00d2ff,0_0_40px_#10b981] z-30 pointer-events-none -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
           <div className="w-2 h-2 rounded-full bg-white animate-ping" />
@@ -403,19 +304,18 @@ export default function Home() {
       <CyberExperience />
       <CyberEducation />
 
-
-      {/* --- SECTION 04: INTERACTIVE ARCADE PROJECT MODULE --- */}
+      {/* Interactive Arcade Project Module */}
       <div id="projects">
         <InteractiveArcade />
       </div>
 
-      {/* --- SECTION 05: CINEMATIC GALLERY VAULT --- */}
+      {/* Cinematic Gallery Vault */}
       <CinematicGallery />
 
-      {/* --- SECTION 06: TESTIMONIALS MATRIX --- */}
+      {/* Testimonials Matrix */}
       <CyberTestimonials />
 
-      {/* --- SECTION 07: CONTACT FOOTER --- */}
+      {/* Contact Footer */}
       <div id="contact">
         <CyberFooter />
       </div>
