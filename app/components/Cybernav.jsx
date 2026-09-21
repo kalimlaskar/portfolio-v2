@@ -9,7 +9,14 @@ const LINKS = [
     { label: 'contact.sh', short: 'Contact', href: '#contact', id: 'contact', dot: '#10b981' },
 ];
 
-export default function CyberNav() {
+const GLOBAL_ACTIONS = [
+    { label: 'GitHub', href: 'https://github.com/kalimlaskar/', external: true },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/kalimlaskar/', external: true },
+    { label: 'Resume', href: '/Kalim-Laskar.pdf', external: true },
+    { label: 'Contact', href: 'mailto:kalim007mailbox@gmail.com', external: false },
+];
+
+export default function Cybernav() {
     const [active, setActive] = useState('');
     const [paletteOpen, setPaletteOpen] = useState(false);
 
@@ -48,7 +55,7 @@ export default function CyberNav() {
         return () => observer.disconnect();
     }, []);
 
-    // Active-tab indicator: a snap, not a bounce — tabs switch mechanically, not elastically
+    // Active-tab indicator
     useEffect(() => {
         const wrap = tabsWrapRef.current;
         const indicator = indicatorRef.current;
@@ -71,7 +78,7 @@ export default function CyberNav() {
         });
     }, [active]);
 
-    // Command palette: Cmd/Ctrl+K to toggle from anywhere, Escape to close
+    // Command palette: Cmd/Ctrl+K to toggle, Escape to close
     useEffect(() => {
         const onKey = (e) => {
             const tag = e.target?.tagName;
@@ -137,10 +144,9 @@ export default function CyberNav() {
 
             {/* Full-width IDE-style dock, flush to the top */}
             <nav ref={navRef} className="nav-anim nav-dock fixed top-0 inset-x-0 z-50 backdrop-blur-2xl">
-                <div className="max-w-6xl mx-auto px-5 sm:px-8">
+                <div className="max-w-7xl mx-auto px-5 sm:px-8">
                     <div className="flex items-center justify-between h-14">
 
-                        {/* Window chrome + wordmark */}
                         {/* Window chrome + wordmark */}
                         <a href="#" className="flex items-center gap-3 shrink-0 group">
                             <span className="flex items-center gap-[5px]" aria-hidden="true">
@@ -169,7 +175,7 @@ export default function CyberNav() {
                                     ref={(el) => { tabRefs.current[link.id] = el; }}
                                     href={link.href}
                                     aria-current={active === link.id ? 'page' : undefined}
-                                    className="nav-tab flex items-center gap-2 px-5 text-[13px] text-zinc-400 hover:text-zinc-200 transition-colors"
+                                    className="nav-tab flex items-center gap-2 px-4 text-[13px] text-zinc-400 hover:text-zinc-200 transition-colors"
                                 >
                                     <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: link.dot }} />
                                     {link.label}
@@ -177,27 +183,42 @@ export default function CyberNav() {
                             ))}
                         </div>
 
-                        {/* CTA styled as a runnable command */}
-                        <a
-                            href="#contact"
-                            className="hidden md:inline-flex items-center gap-2 px-4 py-1.5 rounded-md bg-emerald-500/10 hover:bg-emerald-500 border border-emerald-500/30 text-emerald-400 hover:text-zinc-950 text-[12px] font-mono transition-colors"
-                        >
-                            <span>$</span> contact --now
-                        </a>
+                        {/* Right side quick actions: GitHub, LinkedIn, Resume, Contact & Cmd+K */}
+                        <div className="flex items-center gap-2.5">
+                            <div className="hidden xl:flex items-center gap-1.5">
+                                {GLOBAL_ACTIONS.map((action, i) => (
+                                    <a
+                                        key={i}
+                                        href={action.href}
+                                        {...(action.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                                        className="px-2.5 py-1 rounded bg-zinc-900/60 border border-zinc-800 text-[11px] font-mono text-zinc-300 hover:text-emerald-400 hover:border-emerald-500/30 transition-colors"
+                                    >
+                                        {action.label}
+                                    </a>
+                                ))}
+                            </div>
 
-                        {/* Cmd+K trigger */}
-                        <button
-                            type="button"
-                            onClick={() => setPaletteOpen(true)}
-                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-zinc-800 bg-zinc-900/70 text-zinc-400 hover:text-emerald-400 hover:border-emerald-500/30 transition-colors"
-                            aria-label="Open command menu"
-                        >
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
-                                <path d="M9 9h6v6H9z" stroke="currentColor" strokeWidth="1.6" />
-                            </svg>
-                            <span className="hidden sm:inline text-[11px] font-mono">⌘K</span>
-                        </button>
+                            <a
+                                href="#contact"
+                                className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-emerald-500/10 hover:bg-emerald-500 border border-emerald-500/30 text-emerald-400 hover:text-zinc-950 text-[12px] font-mono transition-colors"
+                            >
+                                <span>$</span> contact --now
+                            </a>
+
+                            {/* Cmd+K trigger */}
+                            <button
+                                type="button"
+                                onClick={() => setPaletteOpen(true)}
+                                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-zinc-800 bg-zinc-900/70 text-zinc-400 hover:text-emerald-400 hover:border-emerald-500/30 transition-colors"
+                                aria-label="Open command menu"
+                            >
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+                                    <path d="M9 9h6v6H9z" stroke="currentColor" strokeWidth="1.6" />
+                                </svg>
+                                <span className="hidden sm:inline text-[11px] font-mono">⌘K</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -226,7 +247,7 @@ export default function CyberNav() {
 
                     <div className="flex items-center gap-2 px-4 py-3.5 border-b border-zinc-900 text-zinc-300 font-mono text-sm">
                         <span className="text-emerald-400">›</span>
-                        <span className="text-zinc-500">jump to section</span>
+                        <span className="text-zinc-500">quick links & actions</span>
                         <span className="palette-cursor w-[6px] h-[16px] bg-emerald-400 ml-0.5" />
                     </div>
 
@@ -246,18 +267,24 @@ export default function CyberNav() {
                                 <span className="text-zinc-600 text-xs">↵</span>
                             </a>
                         ))}
-                        <a
-                            href="#contact"
-                            onClick={() => setPaletteOpen(false)}
-                            className="palette-row flex items-center justify-between px-4 py-3 text-sm text-emerald-400 hover:bg-emerald-500/10 transition-colors"
-                        >
-                            <span className="flex items-center gap-3">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                                <span className="font-mono text-zinc-500">contact.sh</span>
-                                <span>Get in touch</span>
-                            </span>
-                            <span className="text-zinc-600 text-xs">↵</span>
-                        </a>
+
+                        {/* Global Actions inside Command Palette */}
+                        {GLOBAL_ACTIONS.map((action, i) => (
+                            <a
+                                key={`action-${i}`}
+                                href={action.href}
+                                {...(action.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                                onClick={() => setPaletteOpen(false)}
+                                className="palette-row flex items-center justify-between px-4 py-3 text-sm text-emerald-400 hover:bg-emerald-500/10 transition-colors"
+                            >
+                                <span className="flex items-center gap-3">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                                    <span className="font-mono text-zinc-500">open --{action.label.toLowerCase()}</span>
+                                    <span>{action.label}</span>
+                                </span>
+                                <span className="text-zinc-600 text-xs">↗</span>
+                            </a>
+                        ))}
                     </div>
 
                     <div className="px-4 py-2.5 border-t border-zinc-900 text-[11px] font-mono text-zinc-600">

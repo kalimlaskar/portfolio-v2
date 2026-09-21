@@ -13,16 +13,23 @@ import CyberExperience from './components/CyberExperience';
 import CyberEducation from './components/CyberEducation';
 import Cybernav from './components/Cybernav';
 import CyberBento from './components/Cyberbento';
+import CyberFloatingDock from './components/CyberFloatingDock';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 }
 
+const HERO_ACTIONS = [
+  { label: 'GitHub', href: 'https://github.com/kalimlaskar/', external: true },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/kalimlaskar/', external: true },
+  { label: 'Resume', href: '/Kalim-Laskar-%20Resume.pdf', external: true },
+  { label: 'Contact', href: 'mailto:kalim007mailbox@gmail.com', external: false },
+];
+
 export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
   const leftTextRef = useRef<HTMLDivElement>(null);
   const rightCardRef = useRef<HTMLDivElement>(null);
-  //  const bentoRef = useRef<HTMLElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
   const rotatingTextRef = useRef<HTMLSpanElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
@@ -211,6 +218,8 @@ export default function Home() {
 
       {/* Floating Navigation */}
       <Cybernav />
+      {/* Persistent Floating Dock */}
+      <CyberFloatingDock />
 
       {/* Hero Section */}
       <section ref={heroRef} className="pt-[140px] pb-[100px] relative flex flex-col items-center justify-center min-h-[95vh] w-full overflow-hidden px-6">
@@ -256,14 +265,29 @@ export default function Home() {
               Next-generation frontend architecture, fluid motion engineering, and immersive interactive design systems.
             </p>
 
+            {/* Global Action Links Bar */}
+            <div className="hero-anim flex flex-wrap gap-3.5 pt-2">
+              {HERO_ACTIONS.map((action, i) => (
+                <a
+                  key={i}
+                  href={action.href}
+                  {...(action.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  className="px-6 py-3 bg-[rgba(122,162,255,0.07)] border border-[rgba(122,162,255,0.22)] rounded-lg text-white text-[11px] font-mono tracking-[0.18em] uppercase backdrop-blur-md transition-all duration-300 hover:border-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300"
+                >
+                  {action.label}
+                </a>
+              ))}
+            </div>
+
+            {/* Refined Engineering CTAs */}
             <div className="hero-anim pt-2 flex items-center space-x-4">
               <a href="#projects" className="rotating-border-btn inline-block group">
                 <div className="btn-inner-content px-8 py-4 flex items-center space-x-3 text-white font-bold text-base">
-                  <span>Launch Studio</span>
+                  <span>Explore Systems</span>
                 </div>
               </a>
               <a href="#contact" className="px-6 py-4 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 font-semibold text-sm transition-all">
-                Direct Transmission
+                Initialize Contact
               </a>
             </div>
           </div>
