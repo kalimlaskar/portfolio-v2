@@ -52,15 +52,13 @@ const GLOBAL_ACTIONS = [
 ];
 
 const PEAK_SCALE = 1.55;
-const RADIUS = 130; // px of influence on either side of the cursor
+const RADIUS = 130;
 
 export default function CyberFloatingDock() {
     const dockRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
     const [hidden, setHidden] = useState(false);
 
-    // Hide once the footer/#contact section is on screen — the dock exists to get you
-    // there; once you've arrived, it has nothing left to do but sit on top of the footer.
     useEffect(() => {
         const footer = document.getElementById('contact');
         if (!footer) return;
@@ -77,7 +75,7 @@ export default function CyberFloatingDock() {
         if (!dock) return;
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        gsap.fromTo(dock, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', delay: 0.3 });
+        gsap.fromTo(dock, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', delay: 0.3 });
         gsap.fromTo(
             itemRefs.current,
             { scale: 0, opacity: 0 },
@@ -86,9 +84,6 @@ export default function CyberFloatingDock() {
 
         if (reduceMotion) return;
 
-        // Transform-only: scale + y are compositor properties, so this never triggers
-        // layout the way animating width/height did — that's what made the old version
-        // feel laggy instead of snapping cleanly to the cursor.
         const scaleSetters = itemRefs.current.map((el) => gsap.quickTo(el, 'scale', { duration: 0.28, ease: 'power3.out' }));
         const liftSetters = itemRefs.current.map((el) => gsap.quickTo(el, 'y', { duration: 0.28, ease: 'power3.out' }));
 
@@ -102,7 +97,7 @@ export default function CyberFloatingDock() {
                 const itemCenter = itemRect.left - rect.left + itemRect.width / 2;
                 const dist = Math.abs(mouseX - itemCenter);
                 const falloff = Math.max(0, 1 - dist / RADIUS);
-                const eased = falloff * falloff * (3 - 2 * falloff); // smoothstep
+                const eased = falloff * falloff * (3 - 2 * falloff);
 
                 scaleSetters[i](1 + (PEAK_SCALE - 1) * eased);
                 liftSetters[i](-eased * 16);
@@ -127,9 +122,9 @@ export default function CyberFloatingDock() {
     return (
         <div
             ref={dockRef}
-            className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-40 hidden sm:flex items-end gap-3 px-4 py-3 rounded-[22px] bg-zinc-950/70 border border-emerald-500/20 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.75)] transition-[opacity,transform] duration-400 ${hidden ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'
+            style={{ left: '50%', transform: 'translateX(-50%)' }}
+            className={`fixed bottom-6 z-40 hidden sm:flex items-end gap-3 px-4 py-3 rounded-[22px] bg-zinc-950/70 border border-emerald-500/20 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.75)] transition-opacity duration-400 ${hidden ? 'opacity-0 pointer-events-none' : 'opacity-100'
                 }`}
-            style={{ opacity: 0 }}
         >
             {GLOBAL_ACTIONS.map((action, i) => (
                 <a
@@ -142,7 +137,6 @@ export default function CyberFloatingDock() {
                     className="dock-item group relative flex items-center justify-center w-11 h-11 rounded-2xl bg-zinc-900/90 border border-zinc-800 text-zinc-300 hover:text-emerald-400 hover:border-emerald-500/50 hover:bg-emerald-500/10 focus-visible:text-emerald-400 focus-visible:border-emerald-500/60 focus-visible:bg-emerald-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 transition-colors duration-300 shrink-0"
                     style={{ transformOrigin: 'bottom center' }}
                 >
-                    {/* Tooltip — shows on hover AND keyboard focus */}
                     <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-[11px] font-mono text-zinc-200 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-focus-visible:opacity-100 group-focus-visible:translate-y-0 transition-all duration-200">
                         {action.label}
                     </span>
