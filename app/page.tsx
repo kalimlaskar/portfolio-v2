@@ -22,7 +22,8 @@ export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
   const leftTextRef = useRef<HTMLDivElement>(null);
   const rightCardRef = useRef<HTMLDivElement>(null);
-  const bentoRef = useRef<HTMLElement>(null);
+  //  const bentoRef = useRef<HTMLElement>(null);
+  const bentoRef = useRef<HTMLDivElement>(null);
   const rotatingTextRef = useRef<HTMLSpanElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const linePathRef = useRef<SVGPathElement>(null);
